@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>自定义倒计时</title>
+<title>倒计时 · 粉紫版</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -11,123 +11,79 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0f1419;
+    background: #f0e6f2;
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(56, 132, 255, 0.13), transparent 55%),
-      radial-gradient(circle at 80% 70%, rgba(0, 200, 160, 0.10), transparent 55%);
+      radial-gradient(circle at 18% 25%, rgba(235, 110, 190, 0.16), transparent 55%),
+      radial-gradient(circle at 82% 72%, rgba(150, 95, 235, 0.15), transparent 55%),
+      radial-gradient(circle at 60% 8%, rgba(250, 160, 220, 0.12), transparent 45%);
     font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
-    color: #e8edf4;
+    color: #43304f;
     padding: 24px;
-    overflow: hidden;
+    overflow-y: auto;
   }
   .card {
     width: 100%;
-    max-width: 560px;
-    background: rgba(22, 30, 42, 0.78);
-    border: 1px solid rgba(120, 160, 220, 0.18);
+    max-width: 580px;
+    background: rgba(255, 250, 254, 0.85);
+    border: 1px solid rgba(205, 160, 225, 0.4);
     border-radius: 24px;
-    padding: 36px 32px 30px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    padding: 34px 30px 28px;
+    box-shadow: 0 20px 50px rgba(100, 45, 110, 0.18);
     backdrop-filter: blur(14px);
     text-align: center;
+    margin: 10px 0;
   }
-  .label {
-    font-size: 15px;
-    color: #8b9cb3;
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-  }
-  .event-name {
-    font-size: 20px;
-    color: #dfe9f7;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
+  .label { font-size: 14px; color: #8a7495; letter-spacing: 3px; margin-bottom: 6px; }
+  .event-name { font-size: 21px; color: #a03480; font-weight: 700; margin-bottom: 14px; }
   .days {
-    font-size: clamp(72px, 20vw, 136px);
+    font-size: clamp(68px, 19vw, 130px);
     font-weight: 800;
     line-height: 0.92;
-    letter-spacing: -5px;
-    background: linear-gradient(160deg, #7ec3ff 0%, #4d9cff 45%, #2f7ae5 100%);
+    letter-spacing: -4px;
+    background: linear-gradient(160deg, #d94fb0 0%, #a45cf0 50%, #7c4fe0 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-variant-numeric: tabular-nums;
   }
-  .unit {
-    font-size: 16px;
-    color: #8b9cb3;
-    letter-spacing: 8px;
-    margin-top: 6px;
-    margin-bottom: 22px;
+  .unit { font-size: 15px; color: #8a7495; letter-spacing: 8px; margin-top: 6px; margin-bottom: 20px; }
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(200, 140, 220, 0.45), transparent); margin: 0 0 16px; }
+  .clock { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; }
+  .cell { flex: 1; background: rgba(240, 230, 244, 0.75); border-radius: 11px; padding: 11px 6px 9px; }
+  .cell .num { font-size: clamp(19px, 4.6vw, 26px); font-weight: 700; color: #4a3556; font-variant-numeric: tabular-nums; }
+  .cell .tag { font-size: 11px; color: #9a86a8; margin-top: 4px; letter-spacing: 2px; }
+  /* 日期信息标签 */
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 18px; }
+  .chip {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
   }
-  .divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(120, 160, 220, 0.32), transparent);
-    margin: 0 0 18px;
-  }
-  .clock {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .cell {
-    flex: 1;
-    background: rgba(12, 18, 26, 0.62);
-    border-radius: 11px;
-    padding: 12px 6px 10px;
-  }
-  .cell .num {
-    font-size: clamp(20px, 5vw, 28px);
-    font-weight: 700;
-    color: #dfe9f7;
-    font-variant-numeric: tabular-nums;
-  }
-  .cell .tag {
-    font-size: 11px;
-    color: #64768d;
-    margin-top: 5px;
-    letter-spacing: 1.5px;
-  }
-  /* ===== 设置区 ===== */
-  .settings {
-    text-align: left;
-    background: rgba(12, 18, 26, 0.5);
-    border-radius: 14px;
-    padding: 16px;
-  }
-  .settings .row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
+  .chip.pink  { background: rgba(225, 70, 175, 0.12); color: #b8328c; border: 1px solid rgba(225,70,175,0.3); }
+  .chip.purple{ background: rgba(140, 85, 235, 0.12); color: #6636bd; border: 1px solid rgba(140,85,235,0.3); }
+  .chip.gold  { background: rgba(214, 140, 20, 0.12); color: #9c6a0e; border: 1px solid rgba(214,140,20,0.32); }
+  /* 设置区 */
+  .settings { text-align: left; background: rgba(244, 234, 248, 0.85); border-radius: 14px; padding: 15px; border: 1px solid rgba(210, 175, 230, 0.35); }
+  .settings .row { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
   .settings .row:last-child { margin-bottom: 0; }
-  .settings label {
-    font-size: 13px;
-    color: #8b9cb3;
-    white-space: nowrap;
-    min-width: 64px;
-  }
-  .settings input, .settings select {
+  .settings label { font-size: 13px; color: #7c6489; white-space: nowrap; min-width: 64px; }
+  .settings input {
     flex: 1;
-    background: rgba(30, 40, 56, 0.9);
-    border: 1px solid rgba(120, 160, 220, 0.25);
+    background: #ffffff;
+    border: 1px solid #dcc4e6;
     border-radius: 8px;
-    color: #e8edf4;
+    color: #43304f;
     font-size: 14px;
     padding: 8px 10px;
     font-family: inherit;
     outline: none;
-    color-scheme: dark;
+    color-scheme: light;
   }
-  .settings input:focus, .settings select:focus {
-    border-color: #4d9cff;
-  }
+  .settings input:focus { border-color: #d94fb0; }
   .btn {
     flex: 1;
-    background: linear-gradient(135deg, #3b82d6, #2f6ab8);
+    background: linear-gradient(135deg, #d94fb0, #8b5cf6);
     border: none;
     border-radius: 8px;
     color: #fff;
@@ -137,52 +93,57 @@
     cursor: pointer;
     font-family: inherit;
   }
-  .btn:hover { filter: brightness(1.12); }
+  .btn:hover { filter: brightness(1.08); }
   .btn.ghost {
     background: transparent;
-    border: 1px solid rgba(120, 160, 220, 0.3);
-    color: #8b9cb3;
+    border: 1px solid #d9b8e0;
+    color: #8a7495;
     font-weight: 400;
   }
-  .quick {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
+  .quick { display: flex; gap: 8px; margin-bottom: 12px; }
   .quick button {
     flex: 1;
-    background: rgba(30, 40, 56, 0.9);
-    border: 1px solid rgba(120, 160, 220, 0.25);
+    background: #ffffff;
+    border: 1px solid #dcc4e6;
     border-radius: 8px;
-    color: #9fb2c9;
+    color: #7c6489;
     font-size: 12.5px;
     padding: 7px 0;
     cursor: pointer;
     font-family: inherit;
   }
-  .quick button:hover { border-color: #4d9cff; color: #dfe9f7; }
-  .footer {
-    margin-top: 20px;
-    font-size: 11.5px;
-    color: #4e5e72;
-    letter-spacing: 1px;
+  .quick button:hover { border-color: #d94fb0; color: #b8328c; }
+  .hint { font-size: 11px; color: #a08cb0; margin-top: 9px; text-align: center; }
+  /* 已保存列表 */
+  .saved-title { font-size: 13px; color: #7c6489; text-align: left; margin: 16px 2px 8px; letter-spacing: 1px; }
+  .saved-list { display: flex; flex-direction: column; gap: 7px; }
+  .saved-item {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255, 252, 255, 0.8);
+    border: 1px solid rgba(210, 170, 230, 0.4);
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    text-align: left;
   }
+  .saved-item:hover { border-color: #c76ad2; }
+  .saved-item.active { border-color: #d94fb0; background: rgba(217, 79, 176, 0.08); }
+  .saved-item .s-name { font-size: 14px; color: #5c3b52; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .saved-item .s-info { font-size: 11.5px; color: #9a86a8; white-space: nowrap; }
+  .saved-item .s-del {
+    color: #a08cb0; font-size: 15px; padding: 2px 6px; border-radius: 6px; cursor: pointer; flex-shrink: 0;
+  }
+  .saved-item .s-del:hover { color: #c22a76; background: rgba(194, 42, 118, 0.1); }
+  .toggle { font-size: 12px; color: #9a86a8; cursor: pointer; user-select: none; margin-top: 14px; text-align: center; }
+  .toggle:hover { color: #b8328c; }
+  .footer { margin-top: 18px; font-size: 11.5px; color: #a494b0; letter-spacing: 1px; }
   .done .days {
-    background: linear-gradient(160deg, #ffd66e 0%, #ffb02e 100%);
+    background: linear-gradient(160deg, #e8a33d 0%, #e07a3d 100%);
     -webkit-background-clip: text;
     background-clip: text;
   }
-  .toggle {
-    font-size: 12px;
-    color: #64768d;
-    cursor: pointer;
-    user-select: none;
-    margin-top: 14px;
-    text-align: center;
-  }
-  .toggle:hover { color: #8b9cb3; }
   @media (max-width: 420px) {
-    .card { padding: 28px 18px 24px; border-radius: 18px; }
+    .card { padding: 26px 16px 22px; border-radius: 18px; }
   }
 </style>
 </head>
@@ -190,7 +151,7 @@
 
 <div class="card" id="card">
   <div class="label">倒计时</div>
-  <div class="event-name" id="eventName">距离 2027 年</div>
+  <div class="event-name" id="eventName">--</div>
   <div class="days" id="days">--</div>
   <div class="unit">天</div>
   <div class="divider"></div>
@@ -199,6 +160,7 @@
     <div class="cell"><div class="num" id="mm">--</div><div class="tag">分</div></div>
     <div class="cell"><div class="num" id="ss">--</div><div class="tag">秒</div></div>
   </div>
+  <div class="chips" id="chips"></div>
 
   <div class="settings" id="settings">
     <div class="quick">
@@ -213,110 +175,241 @@
     </div>
     <div class="row">
       <label>目标日期</label>
-      <input type="datetime-local" id="dateInput">
+      <input type="datetime-local" id="dateInput" min="2024-02-10T00:00" max="2046-12-31T23:59">
     </div>
     <div class="row">
-      <button class="btn" id="setBtn">开始倒计时</button>
+      <button class="btn" id="saveBtn">保存并倒计时</button>
       <button class="btn ghost" id="resetBtn">恢复默认</button>
     </div>
+    <div class="hint">支持 2024-2046 年的农历、节气与节日显示 · 保存后不用重新输入</div>
   </div>
 
+  <div class="saved-title" id="savedTitle">已保存的倒计时</div>
+  <div class="saved-list" id="savedList"></div>
+
   <div class="toggle" id="toggle">▲ 设置（点此收起 / 展开）</div>
-  <div class="footer" id="footer">每秒自动刷新 · 自动记住你的设置</div>
+  <div class="footer" id="footer"></div>
 </div>
 
 <script>
-  const DEFAULT_TARGET = '2027-01-01T00:00';
-  const DEFAULT_NAME = '距离 2027 年';
-  const $ = id => document.getElementById(id);
-  const pad = n => String(n).padStart(2, '0');
+const LUNAR_YEARS={"2024":{"cny":"2024-02-10","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,30,30,29,30,30,29],"gz":"甲辰"},"2025":{"cny":"2025-01-29","leap":6,"leaplen":29,"len":[30,29,30,29,29,30,30,29,30,30,30,29],"gz":"甲辰"},"2026":{"cny":"2026-02-17","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,30,30,29],"gz":"丙午"},"2027":{"cny":"2027-02-06","leap":0,"leaplen":0,"len":[30,30,29,30,29,29,30,29,29,30,30,29],"gz":"丁未"},"2028":{"cny":"2028-01-26","leap":5,"leaplen":29,"len":[30,30,30,29,30,29,30,29,29,30,30,29],"gz":"丁未"},"2029":{"cny":"2029-02-13","leap":0,"leaplen":0,"len":[30,30,29,30,29,30,29,30,29,29,30,30],"gz":"己酉"},"2030":{"cny":"2030-02-03","leap":0,"leaplen":0,"len":[29,30,29,30,30,29,30,29,30,29,30,29],"gz":"己酉"},"2031":{"cny":"2031-01-23","leap":3,"leaplen":29,"len":[29,30,30,30,29,30,30,29,30,29,30,29],"gz":"庚戌"},"2032":{"cny":"2032-02-11","leap":0,"leaplen":0,"len":[30,29,29,30,29,30,30,29,30,30,29,30],"gz":"壬子"},"2033":{"cny":"2033-01-31","leap":11,"leaplen":29,"len":[29,30,29,29,30,29,30,29,30,30,30,30],"gz":"壬子"},"2034":{"cny":"2034-02-19","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,30,29,30,30,29,30],"gz":"甲寅"},"2035":{"cny":"2035-02-08","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,30,29,30],"gz":"乙卯"},"2036":{"cny":"2036-01-28","leap":6,"leaplen":30,"len":[30,30,29,30,29,29,29,29,30,29,30,30],"gz":"乙卯"},"2037":{"cny":"2037-02-15","leap":0,"leaplen":0,"len":[30,30,29,30,29,29,30,29,29,30,29,30],"gz":"丁巳"},"2038":{"cny":"2038-02-04","leap":0,"leaplen":0,"len":[30,30,29,30,29,30,29,30,29,29,30,29],"gz":"戊午"},"2039":{"cny":"2039-01-24","leap":5,"leaplen":29,"len":[30,30,29,30,30,30,29,30,29,30,29,29],"gz":"戊午"},"2040":{"cny":"2040-02-12","leap":0,"leaplen":0,"len":[30,29,30,30,29,30,29,30,30,29,30,29],"gz":"庚申"},"2041":{"cny":"2041-02-01","leap":0,"leaplen":0,"len":[29,30,29,30,29,30,30,29,30,30,29,30],"gz":"庚申"},"2042":{"cny":"2042-01-22","leap":2,"leaplen":29,"len":[29,30,29,30,29,30,29,30,30,29,30,30],"gz":"辛酉"},"2043":{"cny":"2043-02-10","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,29,30,30,29,30,30],"gz":"癸亥"},"2044":{"cny":"2044-01-30","leap":7,"leaplen":29,"len":[30,29,30,29,29,30,29,30,29,30,30,30],"gz":"癸亥"},"2045":{"cny":"2045-02-17","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,29,30,30],"gz":"乙丑"},"2046":{"cny":"2046-02-06","leap":0,"leaplen":0,"len":[30,29,30,29,30,29,30,29,29,30,29,30],"gz":"丙寅"}};
+const LUNAR_TERMS={"2025-01-05":"小寒","2025-01-20":"大寒","2025-02-03":"立春","2025-02-18":"雨水","2025-03-05":"惊蛰","2025-03-20":"春分","2025-04-04":"清明","2025-04-20":"谷雨","2025-05-05":"立夏","2025-05-21":"小满","2025-06-05":"芒种","2025-06-21":"夏至","2025-07-07":"小暑","2025-07-22":"大暑","2025-08-07":"立秋","2025-08-23":"处暑","2025-09-07":"白露","2025-09-23":"秋分","2025-10-08":"寒露","2025-10-23":"霜降","2025-11-07":"立冬","2025-11-22":"小雪","2025-12-07":"大雪","2025-12-21":"冬至","2026-01-05":"小寒","2026-01-20":"大寒","2026-02-04":"立春","2026-02-18":"雨水","2026-03-05":"惊蛰","2026-03-20":"春分","2026-04-05":"清明","2026-04-20":"谷雨","2026-05-05":"立夏","2026-05-21":"小满","2026-06-05":"芒种","2026-06-21":"夏至","2026-07-07":"小暑","2026-07-23":"大暑","2026-08-07":"立秋","2026-08-23":"处暑","2026-09-07":"白露","2026-09-23":"秋分","2026-10-08":"寒露","2026-10-23":"霜降","2026-11-07":"立冬","2026-11-22":"小雪","2026-12-07":"大雪","2026-12-22":"冬至","2027-01-05":"小寒","2027-01-20":"大寒","2027-02-04":"立春","2027-02-19":"雨水","2027-03-06":"惊蛰","2027-03-21":"春分","2027-04-05":"清明","2027-04-20":"谷雨","2027-05-06":"立夏","2027-05-21":"小满","2027-06-06":"芒种","2027-06-21":"夏至","2027-07-07":"小暑","2027-07-23":"大暑","2027-08-08":"立秋","2027-08-23":"处暑","2027-09-08":"白露","2027-09-23":"秋分","2027-10-08":"寒露","2027-10-23":"霜降","2027-11-07":"立冬","2027-11-22":"小雪","2027-12-07":"大雪","2027-12-22":"冬至","2028-01-06":"小寒","2028-01-20":"大寒","2028-02-04":"立春","2028-02-19":"雨水","2028-03-05":"惊蛰","2028-03-20":"春分","2028-04-04":"清明","2028-04-19":"谷雨","2028-05-05":"立夏","2028-05-20":"小满","2028-06-05":"芒种","2028-06-21":"夏至","2028-07-06":"小暑","2028-07-22":"大暑","2028-08-07":"立秋","2028-08-22":"处暑","2028-09-07":"白露","2028-09-22":"秋分","2028-10-08":"寒露","2028-10-23":"霜降","2028-11-07":"立冬","2028-11-22":"小雪","2028-12-06":"大雪","2028-12-21":"冬至","2029-01-05":"小寒","2029-01-20":"大寒","2029-02-03":"立春","2029-02-18":"雨水","2029-03-05":"惊蛰","2029-03-20":"春分","2029-04-04":"清明","2029-04-20":"谷雨","2029-05-05":"立夏","2029-05-21":"小满","2029-06-05":"芒种","2029-06-21":"夏至","2029-07-07":"小暑","2029-07-22":"大暑","2029-08-07":"立秋","2029-08-23":"处暑","2029-09-07":"白露","2029-09-23":"秋分","2029-10-08":"寒露","2029-10-23":"霜降","2029-11-07":"立冬","2029-11-22":"小雪","2029-12-07":"大雪","2029-12-21":"冬至","2030-01-05":"小寒","2030-01-20":"大寒","2030-02-04":"立春","2030-02-18":"雨水","2030-03-05":"惊蛰","2030-03-20":"春分","2030-04-05":"清明","2030-04-20":"谷雨","2030-05-05":"立夏","2030-05-21":"小满","2030-06-05":"芒种","2030-06-21":"夏至","2030-07-07":"小暑","2030-07-23":"大暑","2030-08-07":"立秋","2030-08-23":"处暑","2030-09-07":"白露","2030-09-23":"秋分","2030-10-08":"寒露","2030-10-23":"霜降","2030-11-07":"立冬","2030-11-22":"小雪","2030-12-07":"大雪","2030-12-22":"冬至","2031-01-05":"小寒","2031-01-20":"大寒","2031-02-04":"立春","2031-02-19":"雨水","2031-03-06":"惊蛰","2031-03-21":"春分","2031-04-05":"清明","2031-04-20":"谷雨","2031-05-06":"立夏","2031-05-21":"小满","2031-06-06":"芒种","2031-06-21":"夏至","2031-07-07":"小暑","2031-07-23":"大暑","2031-08-08":"立秋","2031-08-23":"处暑","2031-09-08":"白露","2031-09-23":"秋分","2031-10-08":"寒露","2031-10-23":"霜降","2031-11-07":"立冬","2031-11-22":"小雪","2031-12-07":"大雪","2031-12-22":"冬至","2032-01-06":"小寒","2032-01-20":"大寒","2032-02-04":"立春","2032-02-19":"雨水","2032-03-05":"惊蛰","2032-03-20":"春分","2032-04-04":"清明","2032-04-19":"谷雨","2032-05-05":"立夏","2032-05-20":"小满","2032-06-05":"芒种","2032-06-21":"夏至","2032-07-06":"小暑","2032-07-22":"大暑","2032-08-07":"立秋","2032-08-22":"处暑","2032-09-07":"白露","2032-09-22":"秋分","2032-10-08":"寒露","2032-10-23":"霜降","2032-11-07":"立冬","2032-11-22":"小雪","2032-12-06":"大雪","2032-12-21":"冬至","2033-01-05":"小寒","2033-01-20":"大寒","2033-02-03":"立春","2033-02-18":"雨水","2033-03-05":"惊蛰","2033-03-20":"春分","2033-04-04":"清明","2033-04-20":"谷雨","2033-05-05":"立夏","2033-05-21":"小满","2033-06-05":"芒种","2033-06-21":"夏至","2033-07-07":"小暑","2033-07-22":"大暑","2033-08-07":"立秋","2033-08-23":"处暑","2033-09-07":"白露","2033-09-23":"秋分","2033-10-08":"寒露","2033-10-23":"霜降","2033-11-07":"立冬","2033-11-22":"小雪","2033-12-07":"大雪","2033-12-21":"冬至","2034-01-05":"小寒","2034-01-20":"大寒","2034-02-04":"立春","2034-02-18":"雨水","2034-03-05":"惊蛰","2034-03-20":"春分","2034-04-05":"清明","2034-04-20":"谷雨","2034-05-05":"立夏","2034-05-21":"小满","2034-06-05":"芒种","2034-06-21":"夏至","2034-07-07":"小暑","2034-07-23":"大暑","2034-08-07":"立秋","2034-08-23":"处暑","2034-09-07":"白露","2034-09-23":"秋分","2034-10-08":"寒露","2034-10-23":"霜降","2034-11-07":"立冬","2034-11-22":"小雪","2034-12-07":"大雪","2034-12-22":"冬至","2035-01-05":"小寒","2035-01-20":"大寒","2035-02-04":"立春","2035-02-19":"雨水","2035-03-06":"惊蛰","2035-03-21":"春分","2035-04-05":"清明","2035-04-20":"谷雨","2035-05-05":"立夏","2035-05-21":"小满","2035-06-06":"芒种","2035-06-21":"夏至","2035-07-07":"小暑","2035-07-23":"大暑","2035-08-07":"立秋","2035-08-23":"处暑","2035-09-08":"白露","2035-09-23":"秋分","2035-10-08":"寒露","2035-10-23":"霜降","2035-11-07":"立冬","2035-11-22":"小雪","2035-12-07":"大雪","2035-12-22":"冬至","2036-01-06":"小寒","2036-01-20":"大寒","2036-02-04":"立春","2036-02-19":"雨水","2036-03-05":"惊蛰","2036-03-20":"春分","2036-04-04":"清明","2036-04-19":"谷雨","2036-05-05":"立夏","2036-05-20":"小满","2036-06-05":"芒种","2036-06-21":"夏至","2036-07-06":"小暑","2036-07-22":"大暑","2036-08-07":"立秋","2036-08-22":"处暑","2036-09-07":"白露","2036-09-22":"秋分","2036-10-08":"寒露","2036-10-23":"霜降","2036-11-07":"立冬","2036-11-22":"小雪","2036-12-06":"大雪","2036-12-21":"冬至","2037-01-05":"小寒","2037-01-20":"大寒","2037-02-03":"立春","2037-02-18":"雨水","2037-03-05":"惊蛰","2037-03-20":"春分","2037-04-04":"清明","2037-04-20":"谷雨","2037-05-05":"立夏","2037-05-21":"小满","2037-06-05":"芒种","2037-06-21":"夏至","2037-07-07":"小暑","2037-07-22":"大暑","2037-08-07":"立秋","2037-08-23":"处暑","2037-09-07":"白露","2037-09-23":"秋分","2037-10-08":"寒露","2037-10-23":"霜降","2037-11-07":"立冬","2037-11-22":"小雪","2037-12-07":"大雪","2037-12-21":"冬至","2038-01-05":"小寒","2038-01-20":"大寒","2038-02-04":"立春","2038-02-18":"雨水","2038-03-05":"惊蛰","2038-03-20":"春分","2038-04-05":"清明","2038-04-20":"谷雨","2038-05-05":"立夏","2038-05-21":"小满","2038-06-05":"芒种","2038-06-21":"夏至","2038-07-07":"小暑","2038-07-23":"大暑","2038-08-07":"立秋","2038-08-23":"处暑","2038-09-07":"白露","2038-09-23":"秋分","2038-10-08":"寒露","2038-10-23":"霜降","2038-11-07":"立冬","2038-11-22":"小雪","2038-12-07":"大雪","2038-12-22":"冬至","2039-01-05":"小寒","2039-01-20":"大寒","2039-02-04":"立春","2039-02-19":"雨水","2039-03-06":"惊蛰","2039-03-21":"春分","2039-04-05":"清明","2039-04-20":"谷雨","2039-05-05":"立夏","2039-05-21":"小满","2039-06-06":"芒种","2039-06-21":"夏至","2039-07-07":"小暑","2039-07-23":"大暑","2039-08-07":"立秋","2039-08-23":"处暑","2039-09-08":"白露","2039-09-23":"秋分","2039-10-08":"寒露","2039-10-23":"霜降","2039-11-07":"立冬","2039-11-22":"小雪","2039-12-07":"大雪","2039-12-22":"冬至","2040-01-06":"小寒","2040-01-20":"大寒","2040-02-04":"立春","2040-02-19":"雨水","2040-03-05":"惊蛰","2040-03-20":"春分","2040-04-04":"清明","2040-04-19":"谷雨","2040-05-05":"立夏","2040-05-20":"小满","2040-06-05":"芒种","2040-06-21":"夏至","2040-07-06":"小暑","2040-07-22":"大暑","2040-08-07":"立秋","2040-08-22":"处暑","2040-09-07":"白露","2040-09-22":"秋分","2040-10-08":"寒露","2040-10-23":"霜降","2040-11-07":"立冬","2040-11-22":"小雪","2040-12-06":"大雪","2040-12-21":"冬至","2041-01-05":"小寒","2041-01-20":"大寒","2041-02-03":"立春","2041-02-18":"雨水","2041-03-05":"惊蛰","2041-03-20":"春分","2041-04-04":"清明","2041-04-20":"谷雨","2041-05-05":"立夏","2041-05-20":"小满","2041-06-05":"芒种","2041-06-21":"夏至","2041-07-07":"小暑","2041-07-22":"大暑","2041-08-07":"立秋","2041-08-23":"处暑","2041-09-07":"白露","2041-09-22":"秋分","2041-10-08":"寒露","2041-10-23":"霜降","2041-11-07":"立冬","2041-11-22":"小雪","2041-12-07":"大雪","2041-12-21":"冬至","2042-01-05":"小寒","2042-01-20":"大寒","2042-02-04":"立春","2042-02-18":"雨水","2042-03-05":"惊蛰","2042-03-20":"春分","2042-04-04":"清明","2042-04-20":"谷雨","2042-05-05":"立夏","2042-05-21":"小满","2042-06-05":"芒种","2042-06-21":"夏至","2042-07-07":"小暑","2042-07-23":"大暑","2042-08-07":"立秋","2042-08-23":"处暑","2042-09-07":"白露","2042-09-23":"秋分","2042-10-08":"寒露","2042-10-23":"霜降","2042-11-07":"立冬","2042-11-22":"小雪","2042-12-07":"大雪","2042-12-22":"冬至","2043-01-05":"小寒","2043-01-20":"大寒","2043-02-04":"立春","2043-02-19":"雨水","2043-03-06":"惊蛰","2043-03-21":"春分","2043-04-05":"清明","2043-04-20":"谷雨","2043-05-05":"立夏","2043-05-21":"小满","2043-06-06":"芒种","2043-06-21":"夏至","2043-07-07":"小暑","2043-07-23":"大暑","2043-08-07":"立秋","2043-08-23":"处暑","2043-09-08":"白露","2043-09-23":"秋分","2043-10-08":"寒露","2043-10-23":"霜降","2043-11-07":"立冬","2043-11-22":"小雪","2043-12-07":"大雪","2043-12-22":"冬至","2044-01-06":"小寒","2044-01-20":"大寒","2044-02-04":"立春","2044-02-19":"雨水","2044-03-05":"惊蛰","2044-03-20":"春分","2044-04-04":"清明","2044-04-19":"谷雨","2044-05-05":"立夏","2044-05-20":"小满","2044-06-05":"芒种","2044-06-21":"夏至","2044-07-06":"小暑","2044-07-22":"大暑","2044-08-07":"立秋","2044-08-22":"处暑","2044-09-07":"白露","2044-09-22":"秋分","2044-10-07":"寒露","2044-10-23":"霜降","2044-11-07":"立冬","2044-11-22":"小雪","2044-12-06":"大雪","2044-12-21":"冬至","2045-01-05":"小寒","2045-01-20":"大寒","2045-02-03":"立春","2045-02-18":"雨水","2045-03-05":"惊蛰","2045-03-20":"春分","2045-04-04":"清明","2045-04-19":"谷雨","2045-05-05":"立夏","2045-05-20":"小满","2045-06-05":"芒种","2045-06-21":"夏至","2045-07-07":"小暑","2045-07-22":"大暑","2045-08-07":"立秋","2045-08-23":"处暑","2045-09-07":"白露","2045-09-22":"秋分","2045-10-08":"寒露","2045-10-23":"霜降","2045-11-07":"立冬","2045-11-22":"小雪","2045-12-07":"大雪","2045-12-21":"冬至"};
 
-  // ===== 读取上次的设置（存在浏览器里，关掉也不丢） =====
-  let target = localStorage.getItem('cd_target') || DEFAULT_TARGET;
-  let name = localStorage.getItem('cd_name') || DEFAULT_NAME;
+const DEFAULT_TARGET = '2027-01-01T00:00';
+const DEFAULT_NAME = '距离 2027 年';
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+const MNAME = {1:'正月',2:'二月',3:'三月',4:'四月',5:'五月',6:'六月',7:'七月',8:'八月',9:'九月',10:'十月',11:'冬月',12:'腊月'};
+const DNAME = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+               '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+               '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+// 农历节日（key: 月-日，闰月不过节）
+const LFEST = {'1-1':'春节','1-15':'元宵节','2-2':'龙抬头','5-5':'端午节','7-7':'七夕节','9-9':'重阳节','12-8':'腊八节'};
+const SFEST = {'1-1':'元旦','3-8':'妇女节','5-1':'劳动节','5-4':'青年节','6-1':'儿童节','10-1':'国庆节'};
+const STATUTORY = ['元旦','春节','清明节','劳动节','端午节','中秋节','国庆节'];
 
-  $('nameInput').value = name === DEFAULT_NAME ? '' : name;
-  $('dateInput').value = target;
-
-  // 收起/展开设置区
-  let open = true;
-  $('toggle').addEventListener('click', () => {
-    open = !open;
-    $('settings').style.display = open ? '' : 'none';
-    $('toggle').textContent = open ? '▲ 设置（点此收起 / 展开）' : '▼ 设置（点此展开修改日期）';
-  });
-
-  // 快捷按钮：点一下直接切换年份
-  document.querySelectorAll('.quick button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      target = btn.dataset.t;
-      name = '距离 ' + target.slice(0, 4) + ' 年';
-      localStorage.setItem('cd_target', target);
-      localStorage.setItem('cd_name', name);
-      $('dateInput').value = target;
-      $('nameInput').value = '';
-      applyAndTick();
-    });
-  });
-
-  // 「开始倒计时」按钮
-  $('setBtn').addEventListener('click', () => {
-    const d = $('dateInput').value;
-    if (!d) { alert('请先选择一个日期'); return; }
-    target = d;
-    const inputName = $('nameInput').value.trim();
-    name = inputName ? ('距离 ' + inputName) : ('距离 ' + d.slice(0, 10));
-    localStorage.setItem('cd_target', target);
-    localStorage.setItem('cd_name', name);
-    applyAndTick();
-    // 设置完自动收起
-    open = false;
-    $('settings').style.display = 'none';
-    $('toggle').textContent = '▼ 设置（点此展开修改日期）';
-  });
-
-  // 恢复默认
-  $('resetBtn').addEventListener('click', () => {
-    target = DEFAULT_TARGET;
-    name = DEFAULT_NAME;
-    localStorage.removeItem('cd_target');
-    localStorage.removeItem('cd_name');
-    $('dateInput').value = target;
-    $('nameInput').value = '';
-    applyAndTick();
-  });
-
-  function applyAndTick() {
-    $('eventName').textContent = name;
-    $('footer').textContent = '目标：' + target.replace('T', ' ');
-    tick();
+/* ================= 农历计算 ================= */
+function lunarInfo(dateStr) {
+  let ly = null;
+  for (let y = 2024; y <= 2046; y++) {
+    if (dateStr >= LUNAR_YEARS[y].cny) ly = y; else break;
   }
+  if (!ly) return null;
+  const s = LUNAR_YEARS[ly];
+  const days = Math.floor((new Date(dateStr + 'T12:00') - new Date(s.cny + 'T12:00')) / 86400000);
+  const order = [];
+  for (let m = 1; m <= 12; m++) {
+    order.push({ m, leap: false, len: s.len[m - 1] });
+    if (s.leap === m) order.push({ m, leap: true, len: s.leaplen });
+  }
+  let rest = days;
+  for (const mo of order) {
+    if (rest < mo.len) return { y: ly, m: mo.m, leap: mo.leap, d: rest + 1, gz: s.gz, mlen: mo.len };
+    rest -= mo.len;
+  }
+  return null;
+}
 
-  function tick() {
-    const t = new Date(target).getTime();
-    if (isNaN(t)) { $('days').textContent = '!'; return; }
-    const diff = t - Date.now();
+function dateInfo(dateStr) {
+  // dateStr: YYYY-MM-DD（不含时间）
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  const out = { week: '星期' + WEEK[dt.getDay()], lunar: null, term: LUNAR_TERMS[dateStr] || null, fest: [] };
 
-    if (diff <= 0) {
-      $('days').textContent = '0';
-      $('hh').textContent = '00';
-      $('mm').textContent = '00';
-      $('ss').textContent = '00';
-      $('eventName').textContent = name + ' 已到达';
-      $('card').classList.add('done');
-      return;
+  const L = lunarInfo(dateStr);
+  if (L) {
+    out.lunar = '农历 ' + L.gz + '年' + (L.leap ? '闰' : '') + MNAME[L.m] + DNAME[L.d - 1];
+    if (!L.leap) {
+      const f = LFEST[L.m + '-' + L.d];
+      if (f) out.fest.push(f);
+      if (L.m === 12 && L.d === L.mlen) out.fest.push('除夕');
     }
-    $('card').classList.remove('done');
-
-    const sec = Math.floor(diff / 1000);
-    $('days').textContent = Math.floor(sec / 86400);
-    $('hh').textContent = pad(Math.floor((sec % 86400) / 3600));
-    $('mm').textContent = pad(Math.floor((sec % 3600) / 60));
-    $('ss').textContent = pad(sec % 60);
   }
+  const sf = SFEST[m + '-' + d];
+  if (sf) out.fest.push(sf);
+  if (out.term === '清明') out.fest.push('清明节'); // 清明是节气兼法定节日
+  out.statutory = out.fest.some(f => STATUTORY.includes(f));
+  return out;
+}
 
-  applyAndTick();
-  setInterval(tick, 1000);
+/* ================= 状态 ================= */
+let curName = localStorage.getItem('cd_name') || DEFAULT_NAME;
+let curTarget = localStorage.getItem('cd_target') || DEFAULT_TARGET;
+let saved = [];
+try { saved = JSON.parse(localStorage.getItem('cd_saved') || 'null') || []; } catch (e) { saved = []; }
+if (!Array.isArray(saved)) saved = [];
+if (!saved.length && !localStorage.getItem('cd_saved_seen')) {
+  saved = [{ n: DEFAULT_NAME, t: DEFAULT_TARGET }];
+  localStorage.setItem('cd_saved', JSON.stringify(saved));
+  localStorage.setItem('cd_saved_seen', '1');
+}
+
+function persist() {
+  localStorage.setItem('cd_name', curName);
+  localStorage.setItem('cd_target', curTarget);
+  localStorage.setItem('cd_saved', JSON.stringify(saved));
+}
+
+/* ================= 界面渲染 ================= */
+function renderChips() {
+  const box = $('chips');
+  box.innerHTML = '';
+  const datePart = curTarget.slice(0, 10);
+  const info = dateInfo(datePart);
+  const chips = [];
+  chips.push({ cls: 'pink', text: info.week });
+  if (info.lunar) chips.push({ cls: 'purple', text: info.lunar });
+  if (info.fest.length) {
+    chips.push({ cls: 'gold', text: info.fest.join(' · ') + (info.statutory ? ' · 法定节假日' : '') });
+  } else if (info.term) {
+    chips.push({ cls: 'purple', text: '节气 · ' + info.term });
+  }
+  chips.forEach(c => {
+    const el = document.createElement('span');
+    el.className = 'chip ' + c.cls;
+    el.textContent = c.text;
+    box.appendChild(el);
+  });
+}
+
+function dayDiff(target) {
+  return Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
+}
+
+function renderSaved() {
+  const list = $('savedList');
+  list.innerHTML = '';
+  $('savedTitle').style.display = saved.length ? '' : 'none';
+  saved.slice().sort((a, b) => a.t.localeCompare(b.t)).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'saved-item' + (item.t === curTarget && item.n === curName ? ' active' : '');
+    const left = document.createElement('div');
+    left.className = 's-name'; left.textContent = item.n;
+    const info = document.createElement('div');
+    info.className = 's-info';
+    const dd = dayDiff(item.t);
+    info.textContent = (dd >= 0 ? '剩 ' + dd + ' 天' : '已过') + ' · ' + item.t.slice(5, 10).replace('-', '/');
+    const del = document.createElement('span');
+    del.className = 's-del'; del.textContent = '×';
+    del.title = '删除';
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      saved = saved.filter(x => x !== item);
+      if (item.t === curTarget) { curName = DEFAULT_NAME; curTarget = DEFAULT_TARGET; }
+      persist(); renderSaved(); applyAndTick();
+    });
+    row.appendChild(left); row.appendChild(info); row.appendChild(del);
+    row.addEventListener('click', () => {
+      curName = item.n; curTarget = item.t;
+      persist(); renderSaved(); applyAndTick();
+      $('dateInput').value = item.t;
+      $('nameInput').value = item.n === DEFAULT_NAME ? '' : item.n.replace(/^距离 /, '');
+    });
+    list.appendChild(row);
+  });
+}
+
+/* ================= 倒计时 ================= */
+function tick() {
+  const t = new Date(curTarget).getTime();
+  if (isNaN(t)) { $('days').textContent = '!'; return; }
+  const diff = t - Date.now();
+  if (diff <= 0) {
+    $('days').textContent = '0';
+    $('hh').textContent = $('mm').textContent = $('ss').textContent = '00';
+    $('eventName').textContent = curName + ' 已到达';
+    $('card').classList.add('done');
+    return;
+  }
+  $('card').classList.remove('done');
+  const sec = Math.floor(diff / 1000);
+  $('days').textContent = Math.floor(sec / 86400);
+  $('hh').textContent = pad(Math.floor((sec % 86400) / 3600));
+  $('mm').textContent = pad(Math.floor((sec % 3600) / 60));
+  $('ss').textContent = pad(sec % 60);
+}
+
+function applyAndTick() {
+  $('eventName').textContent = curName;
+  tick();
+  renderChips();
+  const now = new Date();
+  $('footer').textContent = '今天是 ' + (now.getMonth() + 1) + '月' + now.getDate() + '日 星期' +
+    WEEK[now.getDay()] + ' · 目标 ' + curTarget.replace('T', ' ');
+}
+
+/* ================= 事件 ================= */
+$('nameInput').value = curName === DEFAULT_NAME ? '' : curName.replace(/^距离 /, '');
+$('dateInput').value = curTarget;
+
+let open = true;
+$('toggle').addEventListener('click', () => {
+  open = !open;
+  $('settings').style.display = open ? '' : 'none';
+  $('savedTitle').style.display = open ? '' : (saved.length ? '' : 'none');
+  $('toggle').textContent = open ? '▲ 设置（点此收起 / 展开）' : '▼ 设置（点此展开修改日期）';
+});
+
+document.querySelectorAll('.quick button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    curTarget = btn.dataset.t;
+    curName = '距离 ' + curTarget.slice(0, 4) + ' 年';
+    persist();
+    $('dateInput').value = curTarget;
+    $('nameInput').value = '';
+    applyAndTick(); renderSaved();
+  });
+});
+
+$('saveBtn').addEventListener('click', () => {
+  const d = $('dateInput').value;
+  if (!d) { alert('请先选择一个日期'); return; }
+  const inputName = $('nameInput').value.trim();
+  curTarget = d;
+  curName = inputName ? '距离 ' + inputName : '距离 ' + d.slice(0, 10);
+  // 已存在同日期的条目则更新名称，否则新增
+  const exist = saved.find(x => x.t === d);
+  if (exist) exist.n = curName;
+  else saved.push({ n: curName, t: d });
+  persist();
+  renderSaved(); applyAndTick();
+  open = false;
+  $('settings').style.display = 'none';
+  $('toggle').textContent = '▼ 设置（点此展开修改日期）';
+});
+
+$('resetBtn').addEventListener('click', () => {
+  curTarget = DEFAULT_TARGET; curName = DEFAULT_NAME;
+  persist();
+  $('dateInput').value = curTarget;
+  $('nameInput').value = '';
+  applyAndTick(); renderSaved();
+});
+
+applyAndTick();
+renderSaved();
+setInterval(tick, 1000);
 </script>
 
 </body>
