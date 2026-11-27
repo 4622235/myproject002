@@ -54,12 +54,7 @@
   .cell .tag { font-size: 11px; color: #9a86a8; margin-top: 4px; letter-spacing: 2px; }
   /* 日期信息标签 */
   .chips { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 18px; }
-  .chip {
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    letter-spacing: 0.5px;
-  }
+  .chip { font-size: 12px; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.5px; }
   .chip.pink  { background: rgba(225, 70, 175, 0.12); color: #b8328c; border: 1px solid rgba(225,70,175,0.3); }
   .chip.purple{ background: rgba(140, 85, 235, 0.12); color: #6636bd; border: 1px solid rgba(140,85,235,0.3); }
   .chip.gold  { background: rgba(214, 140, 20, 0.12); color: #9c6a0e; border: 1px solid rgba(214,140,20,0.32); }
@@ -78,7 +73,7 @@
     padding: 8px 10px;
     font-family: inherit;
     outline: none;
-    color-scheme: light;
+    cursor: pointer;
   }
   .settings input:focus { border-color: #d94fb0; }
   .btn {
@@ -100,20 +95,38 @@
     color: #8a7495;
     font-weight: 400;
   }
-  .quick { display: flex; gap: 8px; margin-bottom: 12px; }
-  .quick button {
-    flex: 1;
-    background: #ffffff;
-    border: 1px solid #dcc4e6;
-    border-radius: 8px;
-    color: #7c6489;
-    font-size: 12.5px;
-    padding: 7px 0;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .quick button:hover { border-color: #d94fb0; color: #b8328c; }
   .hint { font-size: 11px; color: #a08cb0; margin-top: 9px; text-align: center; }
+  /* 月历 */
+  .cal { background: #ffffff; border: 1px solid #dcc4e6; border-radius: 10px; padding: 10px; margin-bottom: 11px; }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 6px; }
+  .cal-head button {
+    background: none; border: 1px solid #dcc4e6; border-radius: 6px;
+    width: 30px; height: 26px; color: #7c6489; cursor: pointer; font-size: 14px; flex-shrink: 0;
+  }
+  .cal-head button:hover { border-color: #d94fb0; color: #b8328c; }
+  #calTitle { font-size: 13.5px; color: #5c3b52; font-weight: 600; flex: 1; }
+  .cal-week { display: grid; grid-template-columns: repeat(7, 1fr); font-size: 10.5px; color: #9a86a8; text-align: center; margin-bottom: 4px; }
+  .cal-week span:first-child, .cal-week span:last-child { color: #c76a9e; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-cell { text-align: center; padding: 3px 0 4px; border-radius: 7px; cursor: pointer; }
+  .cal-cell:hover { background: rgba(217, 79, 176, 0.1); }
+  .cal-cell.dim { opacity: 0.32; cursor: default; }
+  .cal-cell .d { font-size: 13px; font-weight: 600; color: #4a3556; line-height: 1.25; }
+  .cal-cell.weekend .d { color: #c23a8c; }
+  .cal-cell.today { background: rgba(140, 85, 235, 0.14); }
+  .cal-cell.sel { background: rgba(217, 79, 176, 0.14); box-shadow: inset 0 0 0 1.5px #d94fb0; }
+  .cal-cell .l { font-size: 9px; color: #9a86a8; line-height: 1.4; white-space: nowrap; overflow: hidden; }
+  .cal-cell.fest .l { color: #b07a10; font-weight: 700; }
+  .cal-cell.term .l { color: #6636bd; font-weight: 700; }
+  /* 实时预览 */
+  .preview {
+    font-size: 12px; color: #7c6489;
+    background: rgba(244, 234, 248, 0.9);
+    border: 1px solid rgba(210, 175, 230, 0.4);
+    border-radius: 8px; padding: 8px 10px; margin-bottom: 11px;
+    text-align: left; line-height: 1.8;
+  }
+  .preview b { color: #b8328c; }
   /* 已保存列表 */
   .saved-title { font-size: 13px; color: #7c6489; text-align: left; margin: 16px 2px 8px; letter-spacing: 1px; }
   .saved-list { display: flex; flex-direction: column; gap: 7px; }
@@ -130,9 +143,7 @@
   .saved-item.active { border-color: #d94fb0; background: rgba(217, 79, 176, 0.08); }
   .saved-item .s-name { font-size: 14px; color: #5c3b52; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .saved-item .s-info { font-size: 11.5px; color: #9a86a8; white-space: nowrap; }
-  .saved-item .s-del {
-    color: #a08cb0; font-size: 15px; padding: 2px 6px; border-radius: 6px; cursor: pointer; flex-shrink: 0;
-  }
+  .saved-item .s-del { color: #a08cb0; font-size: 15px; padding: 2px 6px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
   .saved-item .s-del:hover { color: #c22a76; background: rgba(194, 42, 118, 0.1); }
   .toggle { font-size: 12px; color: #9a86a8; cursor: pointer; user-select: none; margin-top: 14px; text-align: center; }
   .toggle:hover { color: #b8328c; }
@@ -163,20 +174,26 @@
   <div class="chips" id="chips"></div>
 
   <div class="settings" id="settings">
-    <div class="quick">
-      <button data-t="2027-01-01T00:00">2027</button>
-      <button data-t="2028-01-01T00:00">2028</button>
-      <button data-t="2029-01-01T00:00">2029</button>
-      <button data-t="2030-01-01T00:00">2030</button>
-    </div>
     <div class="row">
       <label>事项名称</label>
       <input type="text" id="nameInput" placeholder="例如：生日、放假、考试" maxlength="20">
     </div>
     <div class="row">
       <label>目标日期</label>
-      <input type="datetime-local" id="dateInput" min="2024-02-10T00:00" max="2046-12-31T23:59">
+      <input type="text" id="dateInput" readonly placeholder="点击选择日期（弹出农历日历）">
     </div>
+    <div class="cal" id="calBox" style="display:none">
+      <div class="cal-head">
+        <button id="calPY" title="上一年">«</button>
+        <button id="calPrev" title="上个月">‹</button>
+        <div id="calTitle"></div>
+        <button id="calNext" title="下个月">›</button>
+        <button id="calNY" title="下一年">»</button>
+      </div>
+      <div class="cal-week"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="preview" id="preview"></div>
     <div class="row">
       <button class="btn" id="saveBtn">保存并倒计时</button>
       <button class="btn ghost" id="resetBtn">恢复默认</button>
@@ -195,16 +212,23 @@
 const LUNAR_YEARS={"2024":{"cny":"2024-02-10","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,30,30,29,30,30,29],"gz":"甲辰"},"2025":{"cny":"2025-01-29","leap":6,"leaplen":29,"len":[30,29,30,29,29,30,30,29,30,30,30,29],"gz":"甲辰"},"2026":{"cny":"2026-02-17","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,30,30,29],"gz":"丙午"},"2027":{"cny":"2027-02-06","leap":0,"leaplen":0,"len":[30,30,29,30,29,29,30,29,29,30,30,29],"gz":"丁未"},"2028":{"cny":"2028-01-26","leap":5,"leaplen":29,"len":[30,30,30,29,30,29,30,29,29,30,30,29],"gz":"丁未"},"2029":{"cny":"2029-02-13","leap":0,"leaplen":0,"len":[30,30,29,30,29,30,29,30,29,29,30,30],"gz":"己酉"},"2030":{"cny":"2030-02-03","leap":0,"leaplen":0,"len":[29,30,29,30,30,29,30,29,30,29,30,29],"gz":"己酉"},"2031":{"cny":"2031-01-23","leap":3,"leaplen":29,"len":[29,30,30,30,29,30,30,29,30,29,30,29],"gz":"庚戌"},"2032":{"cny":"2032-02-11","leap":0,"leaplen":0,"len":[30,29,29,30,29,30,30,29,30,30,29,30],"gz":"壬子"},"2033":{"cny":"2033-01-31","leap":11,"leaplen":29,"len":[29,30,29,29,30,29,30,29,30,30,30,30],"gz":"壬子"},"2034":{"cny":"2034-02-19","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,30,29,30,30,29,30],"gz":"甲寅"},"2035":{"cny":"2035-02-08","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,30,29,30],"gz":"乙卯"},"2036":{"cny":"2036-01-28","leap":6,"leaplen":30,"len":[30,30,29,30,29,29,29,29,30,29,30,30],"gz":"乙卯"},"2037":{"cny":"2037-02-15","leap":0,"leaplen":0,"len":[30,30,29,30,29,29,30,29,29,30,29,30],"gz":"丁巳"},"2038":{"cny":"2038-02-04","leap":0,"leaplen":0,"len":[30,30,29,30,29,30,29,30,29,29,30,29],"gz":"戊午"},"2039":{"cny":"2039-01-24","leap":5,"leaplen":29,"len":[30,30,29,30,30,30,29,30,29,30,29,29],"gz":"戊午"},"2040":{"cny":"2040-02-12","leap":0,"leaplen":0,"len":[30,29,30,30,29,30,29,30,30,29,30,29],"gz":"庚申"},"2041":{"cny":"2041-02-01","leap":0,"leaplen":0,"len":[29,30,29,30,29,30,30,29,30,30,29,30],"gz":"庚申"},"2042":{"cny":"2042-01-22","leap":2,"leaplen":29,"len":[29,30,29,30,29,30,29,30,30,29,30,30],"gz":"辛酉"},"2043":{"cny":"2043-02-10","leap":0,"leaplen":0,"len":[29,30,29,29,30,29,29,30,30,29,30,30],"gz":"癸亥"},"2044":{"cny":"2044-01-30","leap":7,"leaplen":29,"len":[30,29,30,29,29,30,29,30,29,30,30,30],"gz":"癸亥"},"2045":{"cny":"2045-02-17","leap":0,"leaplen":0,"len":[30,29,30,29,29,30,29,29,30,29,30,30],"gz":"乙丑"},"2046":{"cny":"2046-02-06","leap":0,"leaplen":0,"len":[30,29,30,29,30,29,30,29,29,30,29,30],"gz":"丙寅"}};
 const LUNAR_TERMS={"2025-01-05":"小寒","2025-01-20":"大寒","2025-02-03":"立春","2025-02-18":"雨水","2025-03-05":"惊蛰","2025-03-20":"春分","2025-04-04":"清明","2025-04-20":"谷雨","2025-05-05":"立夏","2025-05-21":"小满","2025-06-05":"芒种","2025-06-21":"夏至","2025-07-07":"小暑","2025-07-22":"大暑","2025-08-07":"立秋","2025-08-23":"处暑","2025-09-07":"白露","2025-09-23":"秋分","2025-10-08":"寒露","2025-10-23":"霜降","2025-11-07":"立冬","2025-11-22":"小雪","2025-12-07":"大雪","2025-12-21":"冬至","2026-01-05":"小寒","2026-01-20":"大寒","2026-02-04":"立春","2026-02-18":"雨水","2026-03-05":"惊蛰","2026-03-20":"春分","2026-04-05":"清明","2026-04-20":"谷雨","2026-05-05":"立夏","2026-05-21":"小满","2026-06-05":"芒种","2026-06-21":"夏至","2026-07-07":"小暑","2026-07-23":"大暑","2026-08-07":"立秋","2026-08-23":"处暑","2026-09-07":"白露","2026-09-23":"秋分","2026-10-08":"寒露","2026-10-23":"霜降","2026-11-07":"立冬","2026-11-22":"小雪","2026-12-07":"大雪","2026-12-22":"冬至","2027-01-05":"小寒","2027-01-20":"大寒","2027-02-04":"立春","2027-02-19":"雨水","2027-03-06":"惊蛰","2027-03-21":"春分","2027-04-05":"清明","2027-04-20":"谷雨","2027-05-06":"立夏","2027-05-21":"小满","2027-06-06":"芒种","2027-06-21":"夏至","2027-07-07":"小暑","2027-07-23":"大暑","2027-08-08":"立秋","2027-08-23":"处暑","2027-09-08":"白露","2027-09-23":"秋分","2027-10-08":"寒露","2027-10-23":"霜降","2027-11-07":"立冬","2027-11-22":"小雪","2027-12-07":"大雪","2027-12-22":"冬至","2028-01-06":"小寒","2028-01-20":"大寒","2028-02-04":"立春","2028-02-19":"雨水","2028-03-05":"惊蛰","2028-03-20":"春分","2028-04-04":"清明","2028-04-19":"谷雨","2028-05-05":"立夏","2028-05-20":"小满","2028-06-05":"芒种","2028-06-21":"夏至","2028-07-06":"小暑","2028-07-22":"大暑","2028-08-07":"立秋","2028-08-22":"处暑","2028-09-07":"白露","2028-09-22":"秋分","2028-10-08":"寒露","2028-10-23":"霜降","2028-11-07":"立冬","2028-11-22":"小雪","2028-12-06":"大雪","2028-12-21":"冬至","2029-01-05":"小寒","2029-01-20":"大寒","2029-02-03":"立春","2029-02-18":"雨水","2029-03-05":"惊蛰","2029-03-20":"春分","2029-04-04":"清明","2029-04-20":"谷雨","2029-05-05":"立夏","2029-05-21":"小满","2029-06-05":"芒种","2029-06-21":"夏至","2029-07-07":"小暑","2029-07-22":"大暑","2029-08-07":"立秋","2029-08-23":"处暑","2029-09-07":"白露","2029-09-23":"秋分","2029-10-08":"寒露","2029-10-23":"霜降","2029-11-07":"立冬","2029-11-22":"小雪","2029-12-07":"大雪","2029-12-21":"冬至","2030-01-05":"小寒","2030-01-20":"大寒","2030-02-04":"立春","2030-02-18":"雨水","2030-03-05":"惊蛰","2030-03-20":"春分","2030-04-05":"清明","2030-04-20":"谷雨","2030-05-05":"立夏","2030-05-21":"小满","2030-06-05":"芒种","2030-06-21":"夏至","2030-07-07":"小暑","2030-07-23":"大暑","2030-08-07":"立秋","2030-08-23":"处暑","2030-09-07":"白露","2030-09-23":"秋分","2030-10-08":"寒露","2030-10-23":"霜降","2030-11-07":"立冬","2030-11-22":"小雪","2030-12-07":"大雪","2030-12-22":"冬至","2031-01-05":"小寒","2031-01-20":"大寒","2031-02-04":"立春","2031-02-19":"雨水","2031-03-06":"惊蛰","2031-03-21":"春分","2031-04-05":"清明","2031-04-20":"谷雨","2031-05-06":"立夏","2031-05-21":"小满","2031-06-06":"芒种","2031-06-21":"夏至","2031-07-07":"小暑","2031-07-23":"大暑","2031-08-08":"立秋","2031-08-23":"处暑","2031-09-08":"白露","2031-09-23":"秋分","2031-10-08":"寒露","2031-10-23":"霜降","2031-11-07":"立冬","2031-11-22":"小雪","2031-12-07":"大雪","2031-12-22":"冬至","2032-01-06":"小寒","2032-01-20":"大寒","2032-02-04":"立春","2032-02-19":"雨水","2032-03-05":"惊蛰","2032-03-20":"春分","2032-04-04":"清明","2032-04-19":"谷雨","2032-05-05":"立夏","2032-05-20":"小满","2032-06-05":"芒种","2032-06-21":"夏至","2032-07-06":"小暑","2032-07-22":"大暑","2032-08-07":"立秋","2032-08-22":"处暑","2032-09-07":"白露","2032-09-22":"秋分","2032-10-08":"寒露","2032-10-23":"霜降","2032-11-07":"立冬","2032-11-22":"小雪","2032-12-06":"大雪","2032-12-21":"冬至","2033-01-05":"小寒","2033-01-20":"大寒","2033-02-03":"立春","2033-02-18":"雨水","2033-03-05":"惊蛰","2033-03-20":"春分","2033-04-04":"清明","2033-04-20":"谷雨","2033-05-05":"立夏","2033-05-21":"小满","2033-06-05":"芒种","2033-06-21":"夏至","2033-07-07":"小暑","2033-07-22":"大暑","2033-08-07":"立秋","2033-08-23":"处暑","2033-09-07":"白露","2033-09-23":"秋分","2033-10-08":"寒露","2033-10-23":"霜降","2033-11-07":"立冬","2033-11-22":"小雪","2033-12-07":"大雪","2033-12-21":"冬至","2034-01-05":"小寒","2034-01-20":"大寒","2034-02-04":"立春","2034-02-18":"雨水","2034-03-05":"惊蛰","2034-03-20":"春分","2034-04-05":"清明","2034-04-20":"谷雨","2034-05-05":"立夏","2034-05-21":"小满","2034-06-05":"芒种","2034-06-21":"夏至","2034-07-07":"小暑","2034-07-23":"大暑","2034-08-07":"立秋","2034-08-23":"处暑","2034-09-07":"白露","2034-09-23":"秋分","2034-10-08":"寒露","2034-10-23":"霜降","2034-11-07":"立冬","2034-11-22":"小雪","2034-12-07":"大雪","2034-12-22":"冬至","2035-01-05":"小寒","2035-01-20":"大寒","2035-02-04":"立春","2035-02-19":"雨水","2035-03-06":"惊蛰","2035-03-21":"春分","2035-04-05":"清明","2035-04-20":"谷雨","2035-05-05":"立夏","2035-05-21":"小满","2035-06-06":"芒种","2035-06-21":"夏至","2035-07-07":"小暑","2035-07-23":"大暑","2035-08-07":"立秋","2035-08-23":"处暑","2035-09-08":"白露","2035-09-23":"秋分","2035-10-08":"寒露","2035-10-23":"霜降","2035-11-07":"立冬","2035-11-22":"小雪","2035-12-07":"大雪","2035-12-22":"冬至","2036-01-06":"小寒","2036-01-20":"大寒","2036-02-04":"立春","2036-02-19":"雨水","2036-03-05":"惊蛰","2036-03-20":"春分","2036-04-04":"清明","2036-04-19":"谷雨","2036-05-05":"立夏","2036-05-20":"小满","2036-06-05":"芒种","2036-06-21":"夏至","2036-07-06":"小暑","2036-07-22":"大暑","2036-08-07":"立秋","2036-08-22":"处暑","2036-09-07":"白露","2036-09-22":"秋分","2036-10-08":"寒露","2036-10-23":"霜降","2036-11-07":"立冬","2036-11-22":"小雪","2036-12-06":"大雪","2036-12-21":"冬至","2037-01-05":"小寒","2037-01-20":"大寒","2037-02-03":"立春","2037-02-18":"雨水","2037-03-05":"惊蛰","2037-03-20":"春分","2037-04-04":"清明","2037-04-20":"谷雨","2037-05-05":"立夏","2037-05-21":"小满","2037-06-05":"芒种","2037-06-21":"夏至","2037-07-07":"小暑","2037-07-22":"大暑","2037-08-07":"立秋","2037-08-23":"处暑","2037-09-07":"白露","2037-09-23":"秋分","2037-10-08":"寒露","2037-10-23":"霜降","2037-11-07":"立冬","2037-11-22":"小雪","2037-12-07":"大雪","2037-12-21":"冬至","2038-01-05":"小寒","2038-01-20":"大寒","2038-02-04":"立春","2038-02-18":"雨水","2038-03-05":"惊蛰","2038-03-20":"春分","2038-04-05":"清明","2038-04-20":"谷雨","2038-05-05":"立夏","2038-05-21":"小满","2038-06-05":"芒种","2038-06-21":"夏至","2038-07-07":"小暑","2038-07-23":"大暑","2038-08-07":"立秋","2038-08-23":"处暑","2038-09-07":"白露","2038-09-23":"秋分","2038-10-08":"寒露","2038-10-23":"霜降","2038-11-07":"立冬","2038-11-22":"小雪","2038-12-07":"大雪","2038-12-22":"冬至","2039-01-05":"小寒","2039-01-20":"大寒","2039-02-04":"立春","2039-02-19":"雨水","2039-03-06":"惊蛰","2039-03-21":"春分","2039-04-05":"清明","2039-04-20":"谷雨","2039-05-05":"立夏","2039-05-21":"小满","2039-06-06":"芒种","2039-06-21":"夏至","2039-07-07":"小暑","2039-07-23":"大暑","2039-08-07":"立秋","2039-08-23":"处暑","2039-09-08":"白露","2039-09-23":"秋分","2039-10-08":"寒露","2039-10-23":"霜降","2039-11-07":"立冬","2039-11-22":"小雪","2039-12-07":"大雪","2039-12-22":"冬至","2040-01-06":"小寒","2040-01-20":"大寒","2040-02-04":"立春","2040-02-19":"雨水","2040-03-05":"惊蛰","2040-03-20":"春分","2040-04-04":"清明","2040-04-19":"谷雨","2040-05-05":"立夏","2040-05-20":"小满","2040-06-05":"芒种","2040-06-21":"夏至","2040-07-06":"小暑","2040-07-22":"大暑","2040-08-07":"立秋","2040-08-22":"处暑","2040-09-07":"白露","2040-09-22":"秋分","2040-10-08":"寒露","2040-10-23":"霜降","2040-11-07":"立冬","2040-11-22":"小雪","2040-12-06":"大雪","2040-12-21":"冬至","2041-01-05":"小寒","2041-01-20":"大寒","2041-02-03":"立春","2041-02-18":"雨水","2041-03-05":"惊蛰","2041-03-20":"春分","2041-04-04":"清明","2041-04-20":"谷雨","2041-05-05":"立夏","2041-05-20":"小满","2041-06-05":"芒种","2041-06-21":"夏至","2041-07-07":"小暑","2041-07-22":"大暑","2041-08-07":"立秋","2041-08-23":"处暑","2041-09-07":"白露","2041-09-22":"秋分","2041-10-08":"寒露","2041-10-23":"霜降","2041-11-07":"立冬","2041-11-22":"小雪","2041-12-07":"大雪","2041-12-21":"冬至","2042-01-05":"小寒","2042-01-20":"大寒","2042-02-04":"立春","2042-02-18":"雨水","2042-03-05":"惊蛰","2042-03-20":"春分","2042-04-04":"清明","2042-04-20":"谷雨","2042-05-05":"立夏","2042-05-21":"小满","2042-06-05":"芒种","2042-06-21":"夏至","2042-07-07":"小暑","2042-07-23":"大暑","2042-08-07":"立秋","2042-08-23":"处暑","2042-09-07":"白露","2042-09-23":"秋分","2042-10-08":"寒露","2042-10-23":"霜降","2042-11-07":"立冬","2042-11-22":"小雪","2042-12-07":"大雪","2042-12-22":"冬至","2043-01-05":"小寒","2043-01-20":"大寒","2043-02-04":"立春","2043-02-19":"雨水","2043-03-06":"惊蛰","2043-03-21":"春分","2043-04-05":"清明","2043-04-20":"谷雨","2043-05-05":"立夏","2043-05-21":"小满","2043-06-06":"芒种","2043-06-21":"夏至","2043-07-07":"小暑","2043-07-23":"大暑","2043-08-07":"立秋","2043-08-23":"处暑","2043-09-08":"白露","2043-09-23":"秋分","2043-10-08":"寒露","2043-10-23":"霜降","2043-11-07":"立冬","2043-11-22":"小雪","2043-12-07":"大雪","2043-12-22":"冬至","2044-01-06":"小寒","2044-01-20":"大寒","2044-02-04":"立春","2044-02-19":"雨水","2044-03-05":"惊蛰","2044-03-20":"春分","2044-04-04":"清明","2044-04-19":"谷雨","2044-05-05":"立夏","2044-05-20":"小满","2044-06-05":"芒种","2044-06-21":"夏至","2044-07-06":"小暑","2044-07-22":"大暑","2044-08-07":"立秋","2044-08-22":"处暑","2044-09-07":"白露","2044-09-22":"秋分","2044-10-07":"寒露","2044-10-23":"霜降","2044-11-07":"立冬","2044-11-22":"小雪","2044-12-06":"大雪","2044-12-21":"冬至","2045-01-05":"小寒","2045-01-20":"大寒","2045-02-03":"立春","2045-02-18":"雨水","2045-03-05":"惊蛰","2045-03-20":"春分","2045-04-04":"清明","2045-04-19":"谷雨","2045-05-05":"立夏","2045-05-20":"小满","2045-06-05":"芒种","2045-06-21":"夏至","2045-07-07":"小暑","2045-07-22":"大暑","2045-08-07":"立秋","2045-08-23":"处暑","2045-09-07":"白露","2045-09-22":"秋分","2045-10-08":"寒露","2045-10-23":"霜降","2045-11-07":"立冬","2045-11-22":"小雪","2045-12-07":"大雪","2045-12-21":"冬至"};
 
-const DEFAULT_TARGET = '2027-01-01T00:00';
-const DEFAULT_NAME = '距离 2027 年';
+// 默认目标 = 下一个还没过的元旦（元旦当天仍算当年，1月2日起自动跳到明年）
+function nextNewYear() {
+  const n = new Date();
+  const y = (n.getMonth() === 0 && n.getDate() === 1) ? n.getFullYear() : n.getFullYear() + 1;
+  return y + '-01-01';
+}
+let DEFAULT_TARGET = nextNewYear();
+let DEFAULT_NAME = '距离 ' + DEFAULT_TARGET.slice(0, 4) + ' 年';
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
+// 兼容旧数据（可能带 T00:00），统一成带时刻的格式参与计算
+const norm = t => t.includes('T') ? t : t + 'T00:00';
 const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
 const MNAME = {1:'正月',2:'二月',3:'三月',4:'四月',5:'五月',6:'六月',7:'七月',8:'八月',9:'九月',10:'十月',11:'冬月',12:'腊月'};
 const DNAME = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
                '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
                '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
-// 农历节日（key: 月-日，闰月不过节）
 const LFEST = {'1-1':'春节','1-15':'元宵节','2-2':'龙抬头','5-5':'端午节','7-7':'七夕节','9-9':'重阳节','12-8':'腊八节'};
 const SFEST = {'1-1':'元旦','3-8':'妇女节','5-1':'劳动节','5-4':'青年节','6-1':'儿童节','10-1':'国庆节'};
 const STATUTORY = ['元旦','春节','清明节','劳动节','端午节','中秋节','国庆节'];
@@ -232,11 +256,9 @@ function lunarInfo(dateStr) {
 }
 
 function dateInfo(dateStr) {
-  // dateStr: YYYY-MM-DD（不含时间）
   const [y, m, d] = dateStr.split('-').map(Number);
   const dt = new Date(y, m - 1, d);
   const out = { week: '星期' + WEEK[dt.getDay()], lunar: null, term: LUNAR_TERMS[dateStr] || null, fest: [] };
-
   const L = lunarInfo(dateStr);
   if (L) {
     out.lunar = '农历 ' + L.gz + '年' + (L.leap ? '闰' : '') + MNAME[L.m] + DNAME[L.d - 1];
@@ -248,14 +270,14 @@ function dateInfo(dateStr) {
   }
   const sf = SFEST[m + '-' + d];
   if (sf) out.fest.push(sf);
-  if (out.term === '清明') out.fest.push('清明节'); // 清明是节气兼法定节日
+  if (out.term === '清明') out.fest.push('清明节');
   out.statutory = out.fest.some(f => STATUTORY.includes(f));
   return out;
 }
 
 /* ================= 状态 ================= */
 let curName = localStorage.getItem('cd_name') || DEFAULT_NAME;
-let curTarget = localStorage.getItem('cd_target') || DEFAULT_TARGET;
+let curTarget = norm(localStorage.getItem('cd_target') || DEFAULT_TARGET);
 let saved = [];
 try { saved = JSON.parse(localStorage.getItem('cd_saved') || 'null') || []; } catch (e) { saved = []; }
 if (!Array.isArray(saved)) saved = [];
@@ -294,7 +316,7 @@ function renderChips() {
 }
 
 function dayDiff(target) {
-  return Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
+  return Math.floor((new Date(norm(target)).getTime() - Date.now()) / 86400000);
 }
 
 function renderSaved() {
@@ -303,32 +325,129 @@ function renderSaved() {
   $('savedTitle').style.display = saved.length ? '' : 'none';
   saved.slice().sort((a, b) => a.t.localeCompare(b.t)).forEach(item => {
     const row = document.createElement('div');
-    row.className = 'saved-item' + (item.t === curTarget && item.n === curName ? ' active' : '');
+    row.className = 'saved-item' + (norm(item.t) === curTarget && item.n === curName ? ' active' : '');
     const left = document.createElement('div');
     left.className = 's-name'; left.textContent = item.n;
     const info = document.createElement('div');
     info.className = 's-info';
     const dd = dayDiff(item.t);
-    info.textContent = (dd >= 0 ? '剩 ' + dd + ' 天' : '已过') + ' · ' + item.t.slice(5, 10).replace('-', '/');
+    info.textContent = (dd >= 0 ? '剩 ' + dd + ' 天' : '已过') + ' · ' + norm(item.t).slice(5, 10).replace('-', '/');
     const del = document.createElement('span');
     del.className = 's-del'; del.textContent = '×';
     del.title = '删除';
     del.addEventListener('click', e => {
       e.stopPropagation();
       saved = saved.filter(x => x !== item);
-      if (item.t === curTarget) { curName = DEFAULT_NAME; curTarget = DEFAULT_TARGET; }
+      if (norm(item.t) === curTarget) { curName = DEFAULT_NAME; curTarget = norm(DEFAULT_TARGET); }
       persist(); renderSaved(); applyAndTick();
     });
     row.appendChild(left); row.appendChild(info); row.appendChild(del);
     row.addEventListener('click', () => {
-      curName = item.n; curTarget = item.t;
+      curName = item.n; curTarget = norm(item.t);
       persist(); renderSaved(); applyAndTick();
-      $('dateInput').value = item.t;
+      $('dateInput').value = curTarget.slice(0, 10);
       $('nameInput').value = item.n === DEFAULT_NAME ? '' : item.n.replace(/^距离 /, '');
+      syncCalToInput();
     });
     list.appendChild(row);
   });
 }
+
+/* ================= 月历与实时预览 ================= */
+let calY, calM;
+let calOpen = false;
+function setCalOpen(v) {
+  calOpen = v;
+  $('calBox').style.display = v ? '' : 'none';
+}
+function clampCal() {
+  if (calY < 2024) { calY = 2024; calM = 0; }
+  if (calY > 2046) { calY = 2046; calM = 11; }
+}
+function calStr(y, m, d) { return y + '-' + pad(m + 1) + '-' + pad(d); }
+function syncCalToInput() {
+  const v = ($('dateInput').value || '').trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+    calY = parseInt(v.slice(0, 4));
+    calM = parseInt(v.slice(5, 7)) - 1;
+  }
+  renderCal(); updatePreview();
+}
+function updatePreview() {
+  const v = ($('dateInput').value || '').trim();
+  const el = $('preview');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+    el.innerHTML = '点击上方日期框，在日历里选一天，这里会实时显示农历和节日';
+    return;
+  }
+  const info = dateInfo(v);
+  const head = '<b>' + v.replace(/-/g, '/') + '</b> · ' + info.week +
+    (info.lunar ? '<br>' + info.lunar : '');
+  let extra = '';
+  if (info.fest.length) extra = '节日：' + info.fest.join('、') + (info.statutory ? '（法定节假日）' : '');
+  else if (info.term) extra = '节气：' + info.term;
+  el.innerHTML = head + (extra ? '<br>' + extra : '');
+}
+function renderCal() {
+  clampCal();
+  $('calTitle').textContent = calY + '年' + (calM + 1) + '月';
+  const grid = $('calGrid');
+  grid.innerHTML = '';
+  const startDow = new Date(calY, calM, 1).getDay();
+  const dim = new Date(calY, calM + 1, 0).getDate();
+  const dimPrev = new Date(calY, calM, 0).getDate();
+  const now = new Date();
+  const selStr = ($('dateInput').value || '').trim();
+  const cells = [];
+  for (let i = startDow - 1; i >= 0; i--) cells.push({ d: dimPrev - i, off: -1 });
+  for (let d = 1; d <= dim; d++) cells.push({ d, off: 0 });
+  let nd = 1;
+  while (cells.length % 7 !== 0) cells.push({ d: nd++, off: 1 });
+
+  cells.forEach((c, idx) => {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+    const dow = idx % 7;
+    let dateStr = null, label = '', info = null;
+    if (c.off === 0) {
+      dateStr = calStr(calY, calM, c.d);
+      info = dateInfo(dateStr);
+      const L = lunarInfo(dateStr);
+      if (info.fest.length) label = info.fest[0];
+      else if (info.term) label = info.term;
+      else if (L) label = L.d === 1 ? (L.leap ? '闰' : '') + MNAME[L.m] : DNAME[L.d - 1];
+    } else {
+      label = c.d;
+    }
+    cell.innerHTML = '<div class="d">' + c.d + '</div><div class="l">' + label + '</div>';
+    if (c.off !== 0) { cell.classList.add('dim'); }
+    else {
+      if (dow === 0 || dow === 6) cell.classList.add('weekend');
+      if (info.fest.length) cell.classList.add('fest');
+      else if (info.term) cell.classList.add('term');
+      if (dateStr === selStr) cell.classList.add('sel');
+      if (now.getFullYear() === calY && now.getMonth() === calM && now.getDate() === c.d) cell.classList.add('today');
+      cell.addEventListener('click', (ev) => {
+        ev.stopPropagation();  // 防止冒泡到 document 触发"点其他地方收起"
+        $('dateInput').value = dateStr;
+        syncCalToInput();
+      });
+    }
+    grid.appendChild(cell);
+  });
+}
+$('calPY').addEventListener('click', () => { calY--; clampCal(); renderCal(); });
+$('calNY').addEventListener('click', () => { calY++; clampCal(); renderCal(); });
+$('calPrev').addEventListener('click', () => { calM--; if (calM < 0) { calM = 11; calY--; } clampCal(); renderCal(); });
+$('calNext').addEventListener('click', () => { calM++; if (calM > 11) { calM = 0; calY++; } clampCal(); renderCal(); });
+
+// 点日期框弹出农历日历（只有一个日历，不再弹浏览器自带的）
+$('dateInput').addEventListener('click', () => setCalOpen(true));
+document.addEventListener('click', (e) => {
+  if (!calOpen) return;
+  if (e.target === $('dateInput') || $('calBox').contains(e.target)) return;
+  setCalOpen(false);
+});
 
 /* ================= 倒计时 ================= */
 function tick() {
@@ -356,59 +475,52 @@ function applyAndTick() {
   renderChips();
   const now = new Date();
   $('footer').textContent = '今天是 ' + (now.getMonth() + 1) + '月' + now.getDate() + '日 星期' +
-    WEEK[now.getDay()] + ' · 目标 ' + curTarget.replace('T', ' ');
+    WEEK[now.getDay()] + ' · 目标 ' + curTarget.slice(0, 10);
 }
 
 /* ================= 事件 ================= */
 $('nameInput').value = curName === DEFAULT_NAME ? '' : curName.replace(/^距离 /, '');
-$('dateInput').value = curTarget;
+$('dateInput').value = curTarget.slice(0, 10);
 
 let open = true;
 $('toggle').addEventListener('click', () => {
   open = !open;
   $('settings').style.display = open ? '' : 'none';
+  if (!open) setCalOpen(false);
   $('savedTitle').style.display = open ? '' : (saved.length ? '' : 'none');
   $('toggle').textContent = open ? '▲ 设置（点此收起 / 展开）' : '▼ 设置（点此展开修改日期）';
 });
 
-document.querySelectorAll('.quick button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    curTarget = btn.dataset.t;
-    curName = '距离 ' + curTarget.slice(0, 4) + ' 年';
-    persist();
-    $('dateInput').value = curTarget;
-    $('nameInput').value = '';
-    applyAndTick(); renderSaved();
-  });
-});
-
 $('saveBtn').addEventListener('click', () => {
-  const d = $('dateInput').value;
-  if (!d) { alert('请先选择一个日期'); return; }
+  const d = ($('dateInput').value || '').trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { alert('请先点日期框，在日历里选一天'); return; }
   const inputName = $('nameInput').value.trim();
-  curTarget = d;
-  curName = inputName ? '距离 ' + inputName : '距离 ' + d.slice(0, 10);
-  // 已存在同日期的条目则更新名称，否则新增
-  const exist = saved.find(x => x.t === d);
+  curTarget = norm(d);
+  curName = inputName ? '距离 ' + inputName : '距离 ' + d;
+  const exist = saved.find(x => norm(x.t) === curTarget);
   if (exist) exist.n = curName;
-  else saved.push({ n: curName, t: d });
+  else saved.push({ n: curName, t: curTarget });
   persist();
   renderSaved(); applyAndTick();
   open = false;
   $('settings').style.display = 'none';
+  setCalOpen(false);
   $('toggle').textContent = '▼ 设置（点此展开修改日期）';
 });
 
 $('resetBtn').addEventListener('click', () => {
-  curTarget = DEFAULT_TARGET; curName = DEFAULT_NAME;
+  curTarget = norm(DEFAULT_TARGET); curName = DEFAULT_NAME;
   persist();
-  $('dateInput').value = curTarget;
+  $('dateInput').value = curTarget.slice(0, 10);
   $('nameInput').value = '';
-  applyAndTick(); renderSaved();
+  applyAndTick(); renderSaved(); syncCalToInput();
 });
 
 applyAndTick();
 renderSaved();
+calY = parseInt(curTarget.slice(0, 4));
+calM = parseInt(curTarget.slice(5, 7)) - 1;
+syncCalToInput();
 setInterval(tick, 1000);
 </script>
 
